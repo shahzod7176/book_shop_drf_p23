@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'shops',
     'rest_framework',
     'drf_spectacular',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
