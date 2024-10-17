@@ -1,17 +1,18 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_decode
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
-from rest_framework.generics import UpdateAPIView, CreateAPIView, GenericAPIView, DestroyAPIView
+from rest_framework import status, mixins
+from rest_framework.generics import ListCreateAPIView, UpdateAPIView, CreateAPIView, GenericAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.email_service import ActivationEmailService
-from users.models import User
-from users.serializers import UserUpdateSerializer, RegisterUserModelSerializer, LoginUserModelSerializer, \
+from apps.users.email_service import ActivationEmailService
+from apps.users.models import User, Address
+from apps.users.serializers import AddressListModelSerializer, UserUpdateSerializer, RegisterUserModelSerializer, \
+    LoginUserModelSerializer, \
     UserWishlist
 
 
@@ -32,11 +33,10 @@ class UserWishlistCreateAPIViewDestroyAPIView(CreateAPIView, DestroyAPIView):
     permission_classes = IsAuthenticated,
 
 
-@extend_schema(tags=['login-register'])
+@extend_schema(tags=['auth'])
 class RegisterCreateAPIView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterUserModelSerializer
-    permission_classes = AllowAny,
     authentication_classes = ()
 
     def create(self, request, *args, **kwargs):
@@ -51,7 +51,7 @@ class RegisterCreateAPIView(CreateAPIView):
         return Response(response, status.HTTP_201_CREATED)
 
 
-@extend_schema(tags=['login-register'])
+@extend_schema(tags=['auth'])
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginUserModelSerializer
     permission_classes = [AllowAny]
@@ -68,8 +68,10 @@ class LoginAPIView(GenericAPIView):
         }, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=['access-token'])
-class ActivateUserView(APIView):
+@extend_schema(tags=['auth'])
+class UserActivateAPIView(APIView):
+    authentication_classes = ()
+
     def get(self, request, uidb64, token):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
@@ -83,3 +85,39 @@ class ActivateUserView(APIView):
             user.save()
             return Response({"message": "User successfully verified!"})
         raise AuthenticationFailed('Havola yaroqsiz yoki muddati o‘tgan.')
+
+
+@extend_schema(tags=['shops'])
+class AddressListCreateAPIView(ListCreateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressListModelSerializer
+    permission_classes = IsAuthenticated,
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+
+@extend_schema(tags=['shops'])
+class AddressDestroyUpdateAPIView(mixins.UpdateModelMixin, mixins.DestroyModelMixin, GenericAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressListModelSerializer
+    permission_classes = IsAuthenticated,
+
+    def get_queryset(self):
+        qs = super().get_queryset().filter(user=self.request.user)
+        self._can_delete = qs.count() > 1
+        return qs
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if self._can_delete:
+            _user: User = request.user
+            if instance.id in (_user.billing_address_id, _user.shipping_address_id):
+                return Response({"message": "maxsus addresslar"})
+
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "ozi 1ta qoldi!"})
