@@ -3,7 +3,7 @@ from django.db.models import CharField, CASCADE, TextField, ImageField, Model, F
     DecimalField, PositiveIntegerField, PositiveSmallIntegerField, ManyToManyField
 from mptt.models import MPTTModel, TreeForeignKey
 
-from apps.shared.models import TimeBasedModel, SlugTimeBasedModel
+from shared.models import TimeBasedModel, SlugTimeBasedModel
 
 
 class Section(TimeBasedModel):

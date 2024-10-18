@@ -9,9 +9,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.email_service import ActivationEmailService
-from apps.users.models import User, Address
-from apps.users.serializers import AddressListModelSerializer, UserUpdateSerializer, RegisterUserModelSerializer, \
+from users.email_service import ActivationEmailService
+from users.models import User, Address
+from users.serializers import AddressListModelSerializer, UserUpdateSerializer, RegisterUserModelSerializer, \
     LoginUserModelSerializer, \
     UserWishlist
 

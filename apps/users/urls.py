@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.users.views import AddressListCreateAPIView, RegisterCreateAPIView, LoginAPIView, UserActivateAPIView, \
+from users.views import AddressListCreateAPIView, RegisterCreateAPIView, LoginAPIView, UserActivateAPIView, \
     AddressDestroyUpdateAPIView
 
 urlpatterns = [

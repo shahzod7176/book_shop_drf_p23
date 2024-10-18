@@ -3,8 +3,8 @@ from django.db.models import Model, EmailField, CharField, CASCADE, TextField, M
     RESTRICT, ManyToManyField, BooleanField, OneToOneField
 from mptt.models import MPTTModel
 
-from apps.shared.models import TimeBasedModel
-from apps.users.managers import CustomUserManager
+from shared.models import TimeBasedModel
+from users.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -43,12 +43,6 @@ class Address(TimeBasedModel):
     phone_number = CharField(max_length=16)  # todo + siz saqlash kerak
     country = ForeignKey('users.Country', CASCADE)
     user = ForeignKey('users.User', RESTRICT)
-
-    # def clean(self):
-    #     if self.phone_number and not self.phone_number.startswith('+'):
-    #         self.phone_number = self.phone_number.removeprefix('+')
-    #     if len(self.phone_number) < 16:
-    #         raise ValidationError('Telefon raqami to\'g\'ri emas.')
 
     def __str__(self):
         return f"{self.first_name} - {self.last_name}"
