@@ -1,4 +1,4 @@
-from django.db.models import Model, DateTimeField, CharField, BooleanField
+from django.db.models import BooleanField, CharField, DateTimeField, Model
 from django.utils.text import slugify
 
 

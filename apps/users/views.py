@@ -1,19 +1,21 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_decode
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, mixins
-from rest_framework.generics import ListCreateAPIView, UpdateAPIView, CreateAPIView, GenericAPIView, DestroyAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import mixins, status
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     GenericAPIView, ListCreateAPIView,
+                                     UpdateAPIView)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from users.email_service import ActivationEmailService
-from users.models import User, Address
-from users.serializers import AddressListModelSerializer, UserUpdateSerializer, RegisterUserModelSerializer, \
-    LoginUserModelSerializer, \
-    UserWishlist
+from users.models import Address, User
+from users.serializers import (AddressListModelSerializer,
+                               LoginUserModelSerializer,
+                               RegisterUserModelSerializer,
+                               UserUpdateSerializer, UserWishlist)
 
 
 @extend_schema(tags=['user'])

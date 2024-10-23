@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import HiddenField, CurrentUserDefault, CharField, EmailField, IntegerField, BooleanField
-from rest_framework.serializers import Serializer, ModelSerializer
+from rest_framework.fields import (BooleanField, CharField, CurrentUserDefault,
+                                   EmailField, HiddenField, IntegerField)
+from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
-from users.models import User, Address, Country
+from users.models import Address, Country, User
 
 
 class CountryModelSerializer(ModelSerializer):

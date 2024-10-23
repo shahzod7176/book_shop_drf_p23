@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import Model, EmailField, CharField, CASCADE, TextField, Model, ForeignKey, PositiveIntegerField, \
-    RESTRICT, ManyToManyField, BooleanField, OneToOneField
+from django.db.models import (CASCADE, RESTRICT, BooleanField, CharField,
+                              EmailField, ForeignKey, ManyToManyField, Model,
+                              OneToOneField, PositiveIntegerField, TextField)
 from mptt.models import MPTTModel
-
 from shared.models import TimeBasedModel
 from users.managers import CustomUserManager
 
@@ -40,7 +40,7 @@ class Address(TimeBasedModel):
     city = CharField(max_length=255)
     state = CharField(max_length=255, null=True, blank=True)
     postal_code = PositiveIntegerField(db_default=0, null=True, blank=True)
-    phone_number = CharField(max_length=16)  # todo + siz saqlash kerak
+    phone_number = CharField(max_length=16)
     country = ForeignKey('users.Country', CASCADE)
     user = ForeignKey('users.User', RESTRICT)
 

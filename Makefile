@@ -14,3 +14,5 @@ check:
 	flake8 .
 loaddata:
 	python3 manage.py loaddata country
+data:
+	python3 manage.py generate_data --user 5 --category 5
