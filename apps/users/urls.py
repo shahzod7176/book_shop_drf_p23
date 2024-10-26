@@ -1,4 +1,6 @@
 from django.urls import path
+
+from users.serializers import AuthorListModelSerializer
 from users.views import (AddressDestroyUpdateAPIView, AddressListCreateAPIView,
                          LoginAPIView, RegisterCreateAPIView,
                          UserActivateAPIView)
@@ -11,4 +13,5 @@ urlpatterns = [
     path('login', LoginAPIView.as_view(), name='login'),
     path('activate/<uidb64>/<token>', UserActivateAPIView.as_view(), name='activate_user'),
 
+    # path('author', AuthorDetailAPIView.as_view(), name='author_detail'),
 ]

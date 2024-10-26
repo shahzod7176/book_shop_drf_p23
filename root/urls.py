@@ -8,7 +8,7 @@ from root.settings import MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
-                  path('api/v1/', include('urls')),
+                  path('api/v1/', include('apps.urls')),
                   path("ckeditor5/", include('django_ckeditor_5.urls')),
                   path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
                   path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

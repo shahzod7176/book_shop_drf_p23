@@ -1,11 +1,23 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import (BooleanField, CharField, CurrentUserDefault,
-                                   EmailField, HiddenField, IntegerField)
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.fields import HiddenField, CurrentUserDefault, CharField, EmailField, IntegerField, BooleanField
+from rest_framework.serializers import Serializer, ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from users.models import Address, Country, User
+
+from users.models import User, Address, Country, Author
+
+
+class AuthorListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Author
+        exclude = 'description',
+
+
+class AuthorDetailModelSerializer(ModelSerializer):
+    class Meta:
+        model = Author
+        exclude = ()
 
 
 class CountryModelSerializer(ModelSerializer):
@@ -30,6 +42,11 @@ class AddressListModelSerializer(ModelSerializer):
 
         _address = super().create(validated_data)
         _user: User = _address.user
+        if _user.address_set.count() < 2:
+            _user.billing_address = _address
+            _user.shipping_address = _address
+            _user.save()
+
         if _has_billing_address:
             _user.billing_address = _address
             _user.save()
