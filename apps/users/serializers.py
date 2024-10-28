@@ -87,12 +87,10 @@ class UserUpdateSerializer(ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        # Parolni yangilash
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
             validated_data.pop('confirm_password', None)
 
-        # Boshqa ma'lumotlarni yangilash
         instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.save()
